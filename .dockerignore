@@ -1,0 +1,11 @@
+
+## IDEA settings
+.idea
+.vscode
+
+# dotenv environment variable files, it's secrets
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
