@@ -22,6 +22,13 @@ https://drive.google.com/file/d/1Y0tOJT6I4QwZ7Qh6D_fpsaps3uXAg7RA/view?usp=shari
 
 [docs/api.http](docs/api.http) 파일 참고
 
+# 프로젝트 셋팅
+
+``` bash
+sdk install java 17.0.9.amzn # AWS에 배포할 예정이라 jdk 버전 AWS용으로 변경
+
+```
+
 # 프로젝트 실행방법
 
 ``` bash
