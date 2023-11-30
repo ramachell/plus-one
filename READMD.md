@@ -18,7 +18,6 @@ https://drive.google.com/file/d/1Y0tOJT6I4QwZ7Qh6D_fpsaps3uXAg7RA/view?usp=shari
 ![architecture diragram](docs/_images/diagram.png)
 
 
-
 # API 명세서 정의
 
 [docs/api.http](docs/api.http) 파일 참고
