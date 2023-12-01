@@ -5,10 +5,13 @@ import com.example.plusone.gs25.dto.Gs25Dto;
 import com.example.plusone.gs25.service.Gs25Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,11 +25,6 @@ public class Gs25Controller {
 
 	@Autowired
 	private Gs25Service service;
-
-	@RequestMapping("/gs25/fetch")
-	public String fetch() {
-		return "gs25/fetch";
-	}
 
 	@RequestMapping("/gs25/savedb")
 	public String savedb() {
@@ -47,6 +45,12 @@ public class Gs25Controller {
 	public String getList() {
 		service.getList();
 		return "gs25/list";
+	}
+
+	@PostMapping("/gs25/search")
+	public List<Gs25Dto> searchResult(String searchWord){
+		return service.search(searchWord);
+
 	}
 
 }

@@ -20,7 +20,7 @@ public class Gs25DaoImpl implements Gs25Dao {
 	@Override
 	public List<Gs25Dto> getList(Gs25Dto dto) {
 
-		// 수정요망
+
 		return null;
 	}
 

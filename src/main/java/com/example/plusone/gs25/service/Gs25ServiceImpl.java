@@ -17,4 +17,9 @@ public class Gs25ServiceImpl implements Gs25Service {
 	public void getList() {
 
 	}
+
+	@Override
+	public List<Gs25Dto> search(String searchWord) {
+		return null;
+	}
 }
