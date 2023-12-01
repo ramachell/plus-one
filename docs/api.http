@@ -1,0 +1,180 @@
+
+### [1] 1. 편의점 할인 정보 등록
+
+PUT {apiHost}/api/v1/convenience-stores/discounts
+Content-Type: application/json; charset=utf-8
+
+{
+  "convenience_store_id": 1,
+  "product": {
+    "name": "편의점 상품 이름",
+    "image_url": "편의점 상품 이미지 URL",
+    "price": 1000,
+    "description": "편의점 상품 설명",
+    "type": "BEVERAGE",
+    "categories": ["", "", ""]
+  },
+  "discount": {
+    "name": "편의점 할인 이름",
+    "type": "PERCENTAGE",
+    "start_date": "2021-01-01",
+    "end_date": "2021-01-31"
+  }
+}
+
+### [2] 1. 편의점 할인 정보 등록 - bulk
+
+
+PUT {apiHost}/api/v1/convenience-stores/discounts/bulk
+Content-Type: application/json; charset=utf-8
+
+{
+  "convenience_store_id": 1,
+  "items": [
+    {
+      "product": {
+        "name": "편의점 상품 이름",
+        "image_url": "편의점 상품 이미지 URL",
+        "price": 1000,
+        "description": "편의점 상품 설명",
+        "type": "BEVERAGE",
+        "categories": [
+          "",
+          "",
+          ""
+        ]
+      },
+      "discount": {
+        "name": "편의점 할인 이름",
+        "categories": [
+          "1+1",
+          "+1",
+          "겨울"
+        ],
+        "start_date": "2021-01-01",
+        "end_date": "2021-01-31"
+      }
+    }
+  ]
+}
+
+### [3] 2. 편의점 할인 정보 조회
+
+GET {apiHost}/api/v1/convenience-stores/discounts/1
+Content-Type: application/json; charset=utf-8
+
+### [4] 3. 편의점 할인 정보 조회 - 필터
+
+GET {apiHost}/api/v1/convenience-stores/discounts?filter_discount_type=PLUS_ONE
+Content-Type: application/json; charset=utf-8
+
+// Response
+//{
+//  "code": "SUCCESS",
+//  "message": "성공",
+//  "data": {
+//    "discounts": [
+//      {
+//        "product": {
+//          "name": "편의점 상품 이름",
+//          "image_url": "편의점 상품 이미지 URL",
+//          "price": 1000,
+//          "description": "편의점 상품 설명",
+//          "type": "BEVERAGE",
+//          "categories": [
+//            "",
+//            "",
+//            ""
+//          ]
+//        },
+//        "discount": {
+//          "name": "편의점 할인 이름",
+//          "categories": [
+//            "1+1",
+//            "+1",
+//            "겨울"
+//          ],
+//          "start_date": "2021-01-01",
+//          "end_date": "2021-01-31"
+//        }
+//      }
+//    ]
+//  }
+//}
+
+### [5] 3. 편의점 할인 정보 조회 - 검색
+
+POST {apiHost}/api/v1/convenience-stores/discounts/search
+Content-Type: application/json; charset=utf-8
+
+{
+  "query": "콜라",
+  "discount_type": "PLUS_ONE"
+}
+
+### [6] 4. 편의점 할인 정보 수정
+PATCH {apiHost}/api/v1/convenience-stores/discounts/1
+Content-Type: application/json; charset=utf-8
+
+{
+  "product": {
+    "name": "편의점 상품 이름",
+    "image_url": "편의점 상품 이미지 URL",
+    "price": 1000,
+    "description": "편의점 상품 설명",
+    "type": "BEVERAGE",
+    "categories": [
+      "",
+      "",
+      ""
+    ]
+  },
+  "discount": {
+    "name": "편의점 할인 이름",
+    "categories": [
+      "1+1",
+      "+1",
+      "겨울"
+    ],
+    "start_date": "2021-01-01",
+    "end_date": "2021-01-31"
+  }
+}
+
+### [7]  ㅇㅇ5. 편의점 할인정보 매주 카카오톡 챗봇으로 알려주는 기능 - 이번주의 할인정보 알림 - 내부로직은 좀 더 고민
+PATCH {apiHost}/api/v1/notify-kakao/discounts
+Content-Type: application/json; charset=utf-8
+
+// Response
+//{
+//  "code": "SUCCESS",
+//  "message": "성공",
+//  "data": {
+//    "discounts": [
+//      {
+//        "product": {
+//          "name": "편의점 상품 이름",
+//          "image_url": "편의점 상품 이미지 URL",
+//          "price": 1000,
+//          "description": "편의점 상품 설명",
+//          "type": "BEVERAGE",
+//          "categories": [
+//            "",
+//            "",
+//            ""
+//          ]
+//        },
+//        "discount": {
+//          "name": "편의점 할인 이름",
+//          "categories": [
+//            "1+1",
+//            "+1",
+//            "겨울"
+//          ],
+//          "start_date": "2021-01-01",
+//          "end_date": "2021-01-31"
+//        }
+//      }
+//    ]
+//  }
+//}
