@@ -3,6 +3,7 @@ package com.example.plusone.gs25.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Table(name = "gs25Entity")
 @Entity
 @Getter
 @Setter
