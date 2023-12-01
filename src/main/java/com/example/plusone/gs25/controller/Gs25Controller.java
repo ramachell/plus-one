@@ -20,7 +20,6 @@ import java.util.Map;
 @Controller
 public class Gs25Controller {
 
-	@Autowired
 	private Gs25Dao dao;
 
 	@Autowired
