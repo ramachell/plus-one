@@ -22,7 +22,6 @@ import java.util.Map;
 @Slf4j
 public class Gs25Controller {
 
-	@Autowired
 	private Gs25Dao dao;
 
 	@Autowired
