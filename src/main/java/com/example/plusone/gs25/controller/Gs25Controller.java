@@ -3,6 +3,7 @@ package com.example.plusone.gs25.controller;
 import com.example.plusone.gs25.dao.Gs25Dao;
 import com.example.plusone.gs25.dto.Gs25Dto;
 import com.example.plusone.gs25.service.Gs25Service;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import java.util.Map;
  * Handles requests for the application home page.
  */
 @Controller
+@Slf4j
 public class Gs25Controller {
 
 	@Autowired
@@ -25,6 +27,13 @@ public class Gs25Controller {
 
 	@Autowired
 	private Gs25Service service;
+
+	@RequestMapping("/gs25/test")
+	public String logTest(){
+		log.debug("aaaaa");
+		log.error("bbbbb");
+		return null;
+	}
 
 	@RequestMapping("/gs25/savedb")
 	public String savedb() {

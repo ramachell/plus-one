@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 public class gs25Entity {
 
+
     @Id
     @Column(length = 50)
     private int num;
