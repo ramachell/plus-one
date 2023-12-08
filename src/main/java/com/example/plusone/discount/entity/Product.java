@@ -1,9 +1,7 @@
 package com.example.plusone.discount.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "product") // JPA가 사용하기위해 필요한 어노테이션, JPA에게 알려주기 위해 에너테이션을 사용
@@ -15,9 +13,26 @@ import lombok.*;
 public class Product{
 
     @Id
-    @Column(name = "id", nullable = false)
-    private Long id;
+//    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", length = 36, nullable = false)
+    private String id;
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
+
+    @Column(name = "image_url", length = 200)
+    private String image_url;
+
+    @Column(name = "price", length = 20, nullable = false)
+    private int price;
+
+    @Column(name = "description", length = 200, nullable = false)
+    private String description;
+
+    @Column(name = "type", length = 30)
+    private String type;
+
+    @Column(name = "categories", length = 20)
+    private String categories;
+
 }

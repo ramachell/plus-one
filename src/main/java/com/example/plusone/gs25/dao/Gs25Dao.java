@@ -8,6 +8,8 @@ public interface Gs25Dao {
 
 	public void save(Gs25Dto dto);
 
+	public void delete(long id);
+
 	public List<Gs25Dto> getList(Gs25Dto dto);
 
 }

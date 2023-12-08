@@ -18,6 +18,11 @@ public class Gs25DaoImpl implements Gs25Dao {
 	}
 
 	@Override
+	public void delete(long id) {
+
+	}
+
+	@Override
 	public List<Gs25Dto> getList(Gs25Dto dto) {
 
 

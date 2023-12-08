@@ -141,7 +141,7 @@ Content-Type: application/json; charset=utf-8
   }
 }
 
-### [7]  ㅇㅇ5. 편의점 할인정보 매주 카카오톡 챗봇으로 알려주는 기능 - 이번주의 할인정보 알림 - 내부로직은 좀 더 고민
+### [7]  5. 편의점 할인정보 매주 카카오톡 챗봇으로 알려주는 기능 - 이번주의 할인정보 알림 - 내부로직은 좀 더 고민
 PATCH {apiHost}/api/v1/notify-kakao/discounts
 Content-Type: application/json; charset=utf-8
 

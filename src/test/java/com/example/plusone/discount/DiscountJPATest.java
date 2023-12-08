@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Import({JpaConfig.class})
@@ -29,9 +30,16 @@ public class DiscountJPATest {
         // 데이터를 저장을 한다
 
         try {
-            Product product = new Product(11L, "김치");
+
+            String id = UUID.randomUUID().toString();
+
+            Product product = Product.
+                    builder().
+                    id(id).
+                    name("김치").build();
             productRepository.save(product);
             log.info("product id : {}", product.getId());
+
         } catch(Exception e) {
             log.error("error", e);
         }
@@ -45,11 +53,55 @@ public class DiscountJPATest {
         // 데이터를 저장을 한다
 
         try {
-            Optional<Product> product = productRepository.findById(11L);
+            String id = UUID.randomUUID().toString();
+
+            Optional<Product> product = productRepository.findById(id);
             if (product.isEmpty()) {
                 throw new Exception("product is empty");
             } else {
             }
+        } catch(Exception e) {
+            log.error("error", e);
+        }
+    }
+
+    @Test
+    void testCreateAndRead(){
+        log.info("test3");
+
+
+        try {
+
+            String id = UUID.randomUUID().toString();
+            log.info(id);
+
+            Product product = Product.
+                    builder().
+                    id(id).
+                    name("김치")
+                    .price(1000)
+                    .description("맛김치")
+                    .build();
+            productRepository.save(product);
+            log.info("product id : {}", product.getId());
+            log.info("take 1 : {}" , id);
+            log.info("take 2 : {}" , id);
+            log.info("take 3 : {}" , id);
+            log.info("take 4 : {}" , id);
+
+            Optional<Product> product2 = productRepository.findById(id);
+            log.info(product2.toString());
+            if (product2.isEmpty()) {
+                throw new Exception("product is empty");
+            } else {
+                log.info("product2 is : {}", product2.get().toString());
+            }
+        } catch(Exception e) {
+            log.error("error", e);
+        }
+
+        try {
+
         } catch(Exception e) {
             log.error("error", e);
         }
