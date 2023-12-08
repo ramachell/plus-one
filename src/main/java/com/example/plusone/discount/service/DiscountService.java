@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,6 +24,19 @@ public class DiscountService {
         productDto.setId(UUID.randomUUID().toString());
         log.info(productDto.toString());
         productRepository.save(DiscountMapper.INSTANCE.toEntity(productDto));
+
+    }
+
+    public void putProducts(List<ProductDto> productDtoList) {
+        List<Product> productList =  DiscountMapper.INSTANCE.toEntities(productDtoList);
+        for (Product product : productList) {
+            productRepository.save(product);
+        }
+    }
+
+    public Product getProduct(String id) {
+
+        return productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
     }
 }

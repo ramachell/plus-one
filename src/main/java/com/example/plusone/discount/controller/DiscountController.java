@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,8 +34,21 @@ public class DiscountController {
         discountService.putProduct(productDto);
 
         // 나중에 저장 되고 안되고에 따라 바꿀예정이지만 일단...
-        System.out.println("put API");
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/api/v1/convenience-stores/discounts/bulk")
+    public ResponseEntity saveProductList(@RequestBody List<ProductDto> productDtos){
+        discountService.putProducts(productDtos);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/v1/convenience-stores/discounts/{id}")
+    public ResponseEntity getProduct(@PathVariable String id){
+
+        Product product = discountService.getProduct(id);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(product);
+
     }
 
 
