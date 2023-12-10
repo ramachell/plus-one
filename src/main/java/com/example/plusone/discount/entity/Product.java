@@ -35,4 +35,7 @@ public class Product{
     @Column(name = "categories", length = 20)
     private String categories;
 
+    @Column(name = "discountType", length = 10)
+    private String discountType;
+
 }

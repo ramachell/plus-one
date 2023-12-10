@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class DiscountDto {
-
-    private Long id;
-    private String name;
-    private String type;
+public class SearchDto {
+    private String query;
+    private String discount_type;
 }
