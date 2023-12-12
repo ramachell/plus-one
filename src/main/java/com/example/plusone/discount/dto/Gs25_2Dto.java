@@ -1,23 +1,17 @@
 package com.example.plusone.discount.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Builder
-public class DiscountDto {
-
-    private Long id;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Gs25_2Dto {
     private String name;
     private String type;
-
-    private String start_date;
-
-    private String end_date;
-
+    private String img;
+    private int price;
 }

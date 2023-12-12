@@ -11,7 +11,7 @@ public class HomeController {
     @GetMapping("/home")
     public String home (){
         System.out.println("9000");
-        return "index2.html";
+        return "savedb.html";
 
     }
 }

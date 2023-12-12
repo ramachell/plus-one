@@ -1,9 +1,7 @@
 package com.example.plusone.discount.controller;
 
 
-import com.example.plusone.discount.dto.ProductDto;
-import com.example.plusone.discount.dto.ResponseDto;
-import com.example.plusone.discount.dto.SearchDto;
+import com.example.plusone.discount.dto.*;
 import com.example.plusone.discount.entity.Discount;
 import com.example.plusone.discount.entity.Product;
 import com.example.plusone.discount.service.DiscountService;
@@ -15,11 +13,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.KeyAgreementSpi;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +33,27 @@ public class DiscountController {
     @RequestMapping("aaaa")
     public void saveA(){
 
+    }
+
+    @PutMapping("/api/v1/convenience-stores/discounts/putdata")
+    public ResponseEntity putdata(@RequestBody Gs25Dto gs25Dto){
+        return null;
+    }
+
+    @PostMapping("/gs25/save")
+    public ResponseEntity saveDB(Gs25_2Dto gs25_2Dto){
+
+        ProductDto productDto = ProductDto.builder()
+                .name(gs25_2Dto.getName())
+                .image_url(gs25_2Dto.getImg())
+                .price(gs25_2Dto.getPrice())
+                .discountType(gs25_2Dto.getType())
+                .description("test")
+                .build();
+
+        discountService.putProduct(productDto);
+
+        return null;
     }
 
     @PutMapping("/api/v1/convenience-stores/discounts")
