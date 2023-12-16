@@ -2,25 +2,16 @@ package com.example.plusone.discount.controller;
 
 
 import com.example.plusone.discount.dto.*;
-import com.example.plusone.discount.entity.Discount;
-import com.example.plusone.discount.entity.Product;
+import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.service.DiscountService;
-import com.example.plusone.discount.service.ProductService;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.KeyAgreementSpi;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +19,10 @@ import java.util.Objects;
 public class DiscountController {
 
     private final DiscountService discountService;
+
+    private final OpenFeign openFeign;
+
+
 
 
     @RequestMapping("aaaa")
@@ -103,6 +98,36 @@ public class DiscountController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(responseDto);
+    }
+
+    @GetMapping("/api/feigntest")
+    public ResponseEntity callFeign(@RequestBody String url){
+        log.info(url);
+        String result;
+        System.out.println(url);
+
+        if(url.equals("get")){
+            result = openFeign.feignCall(url);
+        } else if(url.equals("post")) {
+            result = openFeign.feignPost(url);
+        } else {
+            result = "잘못됐어!";
+        }
+
+        log.info(result);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(result);
+    }
+
+    @GetMapping("/apitest")
+    public String apitest(){
+        log.info("api GET");
+        return "test_GET";
+    }
+
+    @PostMapping("/apitest")
+    public String apitest2(){
+        log.info("apt POST ");
+        return "test_POST";
     }
 
 
