@@ -1,17 +1,14 @@
 package com.example.plusone.discount.openfeign;
 
-import com.example.plusone.config.openFeignConfig;
+import com.example.plusone.config.OpenFeignConfig;
+import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 
-@FeignClient(name = "testfeign", url = "localhost:9000/apitest",configuration = openFeignConfig.class)
+@FeignClient(name = "testfeign",url = "gs25.gsretail.com/gscvs/ko/products/event-goods-search?CSRFToken=60960598-3d2d-437c-bea2-58486021c6f3")
 public interface OpenFeign {
 
-    //https://api.github.com/repos/octocat/hello-world/contributors
     @GetMapping
-    String feignCall(String url);
-
-    @PostMapping
-    String feignPost(String url);
+    String feignGetGs25();
 }

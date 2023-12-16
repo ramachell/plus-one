@@ -53,6 +53,8 @@ dependencies {
 	// openfeign (http 통신)
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
 }
 
 tasks.named('test') {

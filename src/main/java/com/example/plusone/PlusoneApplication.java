@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
 @SpringBootApplication
-@EnableFeignClients
+//@EnableFeignClients
 public class PlusoneApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PlusoneApplication.class, args);

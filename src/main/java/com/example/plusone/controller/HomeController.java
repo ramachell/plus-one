@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class HomeController {
 
-    @Value("${ees.poot}")
-    private String poooot;
-
     @GetMapping("/home")
     public String home (){
         System.out.println("9000");
-        log.info(poooot);
+
         return "savedb.html";
 
     }
