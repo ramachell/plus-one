@@ -2,6 +2,7 @@ package com.example.plusone.discount.controller;
 
 
 import com.example.plusone.discount.dto.*;
+import com.example.plusone.discount.entity.Product;
 import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.service.DiscountService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +117,16 @@ public class DiscountController {
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(map);
     }
+
+    @GetMapping("/apitest")
+    public ResponseEntity test(){
+        List<ProductDto> list = new ArrayList<>();
+        list.add(ProductDto.builder().searchDto(SearchDto.builder().query("aaa").discount_type("oonnoo").build()).build());
+        list.add(ProductDto.builder().searchDto(SearchDto.builder().query("aaa").discount_type("oonnoo").build()).build());
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(list);
+    }
+
 
 
 

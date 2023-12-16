@@ -8,6 +8,7 @@ import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.repository.ProductRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
@@ -62,6 +63,18 @@ public class DiscountService {
     }
 
     public Map<String, Object> insertGs25() {
+        String aa = openFeign.feignGetGs25();
+        log.info(aa);
+        String cc = aa.replace("\\","");
+        log.info(cc);
+        GsonJsonParser parser = new GsonJsonParser();
+
+//        Object obj = parser.parseMap(aa);
+//        Object obj1 = parser.parseMap(cc);
+
+//        String json1 = "{\"aaa\":\"bbb\",\"result\":
+
+
 
 
         return null;

@@ -14,6 +14,5 @@ public class Gs25Dto {
     private int pageSize;
     private String searchType;
     private String searchWord;
-    private String parameterList;
 
 }
