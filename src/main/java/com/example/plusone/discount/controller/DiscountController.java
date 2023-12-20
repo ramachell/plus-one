@@ -3,6 +3,8 @@ package com.example.plusone.discount.controller;
 
 import com.example.plusone.discount.dto.*;
 import com.example.plusone.discount.entity.Product;
+import com.example.plusone.discount.gs25.dto.Gs25Dto;
+import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.service.DiscountService;
 import lombok.RequiredArgsConstructor;
@@ -118,14 +120,26 @@ public class DiscountController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(map);
     }
 
-    @GetMapping("/apitest")
-    public ResponseEntity test(){
-        List<ProductDto> list = new ArrayList<>();
-        list.add(ProductDto.builder().searchDto(SearchDto.builder().query("aaa").discount_type("oonnoo").build()).build());
-        list.add(ProductDto.builder().searchDto(SearchDto.builder().query("aaa").discount_type("oonnoo").build()).build());
+    @PutMapping("/api/v1/convenience-stores/discounts/insert/gs25")
+    public ResponseEntity test(@RequestBody Gs25Dto gs25Dto){
+        Gs25Product gs25Product = gs25Dto.getResults().get(0);
+        log.info(gs25Product.toString());
+        ProductDto productDto = ProductDto.builder()
+                .name(gs25Product.getGoodsNm())
+                .price((int) gs25Product.getPrice())
+                .image_url(gs25Product.getAttFileId())
+                .description("상품1")
+                .build();
+        discountService.putProduct(productDto);
 
-        return ResponseEntity.status(HttpStatus.OK.value()).body(list);
+
+        return null;
     }
+
+    // TODO
+    // 1. 외부 gs25에 접속해서 상품 리스트를 받아오는 api
+    // 2. 받아온 리스트를 DB에 저장할수 있게 바꾸는 api
+    // 3. 그 리스트를 저장하는 것
 
 
 
