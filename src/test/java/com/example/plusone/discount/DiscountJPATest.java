@@ -31,11 +31,9 @@ public class DiscountJPATest {
 
         try {
 
-            String id = UUID.randomUUID().toString();
 
             Product product = Product.
                     builder().
-                    id(id).
                     name("김치").build();
             productRepository.save(product);
             log.info("product id : {}", product.getId());
@@ -77,7 +75,7 @@ public class DiscountJPATest {
 
             Product product = Product.
                     builder().
-                    id(id).
+
                     name("김치")
                     .price(1000)
                     .description("맛김치")

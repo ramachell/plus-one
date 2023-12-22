@@ -30,7 +30,7 @@ public class DiscountController {
     }
 
     @PutMapping("/api/v1/convenience-stores/discounts/putdata")
-    public ResponseEntity putdata(@RequestBody Gs25PreDto gs25PreDtos){
+    public ResponseEntity putdata(@RequestBody Gs25PreDto gs25PreDto){
         return null;
     }
 
@@ -138,21 +138,11 @@ public class DiscountController {
         return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 
-    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25_2")
+    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25/feign")
     public ResponseEntity saveGs25(@RequestBody Gs25SearchDto gs25SearchDto){
         discountService.insertGs25(gs25SearchDto);
         return null;
 
     }
-
-
-
-
-
-
-
-
-
-
 
 }

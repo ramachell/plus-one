@@ -27,19 +27,19 @@ class GoodsStat {
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class EventTypeSp {
-    private String code;
-    private String codeLowerCase;
-
-}
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 class Pagination {
     private int totalNumberOfResults;
     private int numberOfPages;
     private int pageSize;
     private int currentPage;
+}
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+class EventTypeSp {
+    private String code;
+    private String codeLowerCase;
+
 }

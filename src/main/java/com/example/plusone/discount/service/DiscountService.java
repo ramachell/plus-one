@@ -6,6 +6,7 @@ import com.example.plusone.discount.dto.ProductDto;
 import com.example.plusone.discount.dto.SearchDto;
 import com.example.plusone.discount.entity.Product;
 import com.example.plusone.discount.gs25.dto.Gs25PreDto;
+import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.mapper.DiscountMapper;
 import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.repository.ProductRepository;
@@ -18,10 +19,7 @@ import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,6 @@ public class DiscountService {
 
 
     public void putProduct(ProductDto productDto){
-//        productDto.setId(UUID.randomUUID().toString());
         log.info(productDto.toString());
         productRepository.save(DiscountMapper.INSTANCE.toEntity(productDto));
 
@@ -68,12 +65,32 @@ public class DiscountService {
     public Map<String, Object> insertGs25(Gs25SearchDto gs25SearchDto) {
 
         log.info(gs25SearchDto.toString());
-        Gs25PreDto result = openFeign.feignGetGs25_2(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
+        Object result = openFeign.feignGetGs25(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
         log.info(result.toString());
-
-
+        Gson gson = new Gson();
+        Gs25PreDto gs25PreDto = gson.fromJson(result.toString(),Gs25PreDto.class);
+        List<ProductDto> list = gs25PreDtoToProductDtos(gs25PreDto);
+        putProducts(list);
         return null;
     }
 
 
+    public List<ProductDto> gs25PreDtoToProductDtos(Gs25PreDto gs25PreDto){
+
+        List<ProductDto> list = new ArrayList<>();
+
+        for(int i = 0 ; i < gs25PreDto.getResults().size() ; i ++){
+            Gs25Product gs25Product = gs25PreDto.getResults().get(i);
+            ProductDto productDto = ProductDto.builder()
+                    .name(gs25Product.getGoodsNm())
+                    .image_url(gs25Product.getAttFileId())
+                    .price((int)gs25Product.getPrice())
+                    .discountType(gs25Product.getEventTypeNm())
+                    .build();
+
+            list.add(productDto);
+        }
+
+        return list;
+    }
 }

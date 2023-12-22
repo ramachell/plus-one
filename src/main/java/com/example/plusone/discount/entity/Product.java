@@ -13,9 +13,9 @@ import lombok.*;
 public class Product{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", length = 36, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", length = 10, nullable = false)
+    private int id;
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
