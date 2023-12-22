@@ -19,7 +19,7 @@ public interface OpenFeign {
     String feignGetGs25();
 
     @GetMapping(value = "?pageNum={pageNum}&pageSize={pageSize}&parameterList={parameterList}")
-    String feignGetGs25_2(@PathVariable int pageNum,
+    Gs25PreDto feignGetGs25_2(@PathVariable int pageNum,
                               @PathVariable int pageSize,
                               @PathVariable String parameterList);
 

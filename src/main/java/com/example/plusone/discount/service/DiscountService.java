@@ -68,9 +68,8 @@ public class DiscountService {
     public Map<String, Object> insertGs25(Gs25SearchDto gs25SearchDto) {
 
         log.info(gs25SearchDto.toString());
-        String result = openFeign.feignGetGs25_2(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
-        log.info(result);
-
+        Gs25PreDto result = openFeign.feignGetGs25_2(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
+        log.info(result.toString());
 
 
         return null;
