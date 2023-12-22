@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Gs25Dto {
-    private int pageNum;
-    private int pageSize;
-    private String searchType;
-    private String searchWord;
-
+    private String name;
+    private String type;
+    private String img;
+    private int price;
 }

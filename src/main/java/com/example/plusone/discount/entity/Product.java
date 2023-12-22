@@ -13,7 +13,7 @@ import lombok.*;
 public class Product{
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", length = 36, nullable = false)
     private String id;
 
@@ -26,7 +26,7 @@ public class Product{
     @Column(name = "price", length = 20, nullable = false)
     private int price;
 
-    @Column(name = "description", length = 200, nullable = false)
+    @Column(name = "description", length = 200)
     private String description;
 
     @Column(name = "type", length = 30)

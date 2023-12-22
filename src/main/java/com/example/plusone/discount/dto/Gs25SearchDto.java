@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Gs25_2Dto {
-    private String name;
-    private String type;
-    private String img;
-    private int price;
+public class Gs25SearchDto {
+    private int pageNum;
+    private int pageSize;
+    private String searchType;
+    private String searchWord;
+
 }

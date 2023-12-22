@@ -28,6 +28,4 @@ public class ProductDto {
 
     private String discountType;
 
-    private SearchDto searchDto;
-
 }

@@ -1,8 +1,11 @@
 package com.example.plusone.discount.service;
 
+import com.example.plusone.discount.dto.Gs25Dto;
+import com.example.plusone.discount.dto.Gs25SearchDto;
 import com.example.plusone.discount.dto.ProductDto;
 import com.example.plusone.discount.dto.SearchDto;
 import com.example.plusone.discount.entity.Product;
+import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.mapper.DiscountMapper;
 import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.repository.ProductRepository;
@@ -35,7 +38,7 @@ public class DiscountService {
 
 
     public void putProduct(ProductDto productDto){
-        productDto.setId(UUID.randomUUID().toString());
+//        productDto.setId(UUID.randomUUID().toString());
         log.info(productDto.toString());
         productRepository.save(DiscountMapper.INSTANCE.toEntity(productDto));
 
@@ -62,22 +65,16 @@ public class DiscountService {
         return DiscountMapper.INSTANCE.toDTOs(productList);
     }
 
-    public Map<String, Object> insertGs25() {
-        String aa = openFeign.feignGetGs25();
-        log.info(aa);
-        String cc = aa.replace("\\","");
-        log.info(cc);
-        GsonJsonParser parser = new GsonJsonParser();
+    public Map<String, Object> insertGs25(Gs25SearchDto gs25SearchDto) {
 
-//        Object obj = parser.parseMap(aa);
-//        Object obj1 = parser.parseMap(cc);
-
-//        String json1 = "{\"aaa\":\"bbb\",\"result\":
-
+        log.info(gs25SearchDto.toString());
+        String result = openFeign.feignGetGs25_2(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
+        log.info(result);
 
 
 
         return null;
-
     }
+
+
 }

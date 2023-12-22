@@ -36,7 +36,7 @@ public class Gs25Controller {
 
 	@RequestMapping("/gs25/savedb")
 	public String savedb() {
-		return "savedb.html";
+		return "saveGs25.html";
 	}
 
 	@RequestMapping("/gs25/save")

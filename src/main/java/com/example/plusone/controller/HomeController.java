@@ -15,7 +15,7 @@ public class HomeController {
     public String home (){
         System.out.println("9000");
 
-        return "savedb.html";
+        return "saveGs25.html";
 
     }
 }

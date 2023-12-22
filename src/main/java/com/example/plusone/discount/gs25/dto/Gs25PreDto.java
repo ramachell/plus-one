@@ -7,7 +7,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Gs25Dto {
+public class Gs25PreDto {
     private List<Gs25Product> results;
     private Pagination pagination;
 

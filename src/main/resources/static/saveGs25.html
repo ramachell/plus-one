@@ -41,8 +41,11 @@
 </head>
 <body>
 <div class="container">
+    <h1>GS25</h1>
     <form id="searchForm" action="https://cors-anywhere.herokuapp.com/http://gs25.gsretail.com/gscvs/ko/products/event-goods-search?CSRFToken=c5465de1-aac8-4b3f-a9e6-dbbd76eb4857" method="get">
 <!--    <form id="searchForm" action="http://gs25.gsretail.com/gscvs/ko/products/event-goods-search?CSRFToken=c5465de1-aac8-4b3f-a9e6-dbbd76eb4857" method="get">-->
+<!--        <form id="searchForm" action="https://cu.bgfretail.com/event/plusAjax.do" method="get">-->
+
         <input type="text" hidden name="searchType" placeholder="searchType" />
         <input type="text" name="pageNum" placeholder="pageNum" />
         <input type="text" name="pageSize" placeholder="pageSize" value=999 />
@@ -109,11 +112,11 @@
         .then(res=>res.json())
         .then(data=>{
             const data2 = JSON.parse(data);
-<!--            for(let i = 0 ; i < data2.results.length ; i++ ){-->
-            for(let i = 0 ; i < 1 ; i++ ){
+            for(let i = 0 ; i < data2.results.length ; i++ ){
+            // for(let i = 0 ; i < 1 ; i++ ){
                 const rs = data2.results[i];
                 // 폼만들기
-                fetch("http://localhost:9000/gs25/save", {
+                fetch("http://localhost:9000/api/v1/convenience-stores/discounts/insert/gs25", {
                     method: 'POST',
                     cache: 'no-cache',
                     body: new URLSearchParams({

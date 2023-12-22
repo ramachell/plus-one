@@ -2,20 +2,16 @@ package com.example.plusone.discount.controller;
 
 
 import com.example.plusone.discount.dto.*;
-import com.example.plusone.discount.entity.Product;
-import com.example.plusone.discount.gs25.dto.Gs25Dto;
+import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.gs25.dto.Gs25Product;
-import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.service.DiscountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,22 +30,28 @@ public class DiscountController {
     }
 
     @PutMapping("/api/v1/convenience-stores/discounts/putdata")
-    public ResponseEntity putdata(@RequestBody Gs25Dto gs25Dto){
+    public ResponseEntity putdata(@RequestBody Gs25PreDto gs25PreDtos){
         return null;
     }
 
-    @PostMapping("/gs25/save")
-    public ResponseEntity saveDB(Gs25_2Dto gs25_2Dto){
+    @PostMapping("/api/v1/convenience-stores/discounts/insert/gs25")
+    public ResponseEntity insertGs25(Gs25Dto gs25Dto){
 
         ProductDto productDto = ProductDto.builder()
-                .name(gs25_2Dto.getName())
-                .image_url(gs25_2Dto.getImg())
-                .price(gs25_2Dto.getPrice())
-                .discountType(gs25_2Dto.getType())
-                .description("test")
+                .name(gs25Dto.getName())
+                .image_url(gs25Dto.getImg())
+                .price(gs25Dto.getPrice())
+                .discountType(gs25Dto.getType())
                 .build();
 
         discountService.putProduct(productDto);
+
+        return null;
+    }
+
+    @PostMapping("/api/v1/convenience-stores/discounts/insert/7_eleven")
+    public ResponseEntity insert7_eleven(){
+        // 비상... gs25랑은 너무나 다른방식....
 
         return null;
     }
@@ -104,25 +106,25 @@ public class DiscountController {
     }
 
 
-    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25")
-    public ResponseEntity insertGs25(){
-        Map<String,Object> map = discountService.insertGs25();
-
-        ResponseDto responseDto = ResponseDto.builder()
-                .code("SUCCESS")
-                .timestamp(String.valueOf(new Timestamp(System.currentTimeMillis())))
-                .path("여기 어케하지... 비워야하나")
-                .message("성공")
-                .error("ERROR")
-                .status(HttpStatus.OK.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK.value()).body(map);
-    }
+//    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25")
+//    public ResponseEntity insertGs25(){
+//        Map<String,Object> map = discountService.insertGs25();
+//
+//        ResponseDto<Object> responseDto = ResponseDto.builder()
+//                .code("SUCCESS")
+//                .timestamp(String.valueOf(new Timestamp(System.currentTimeMillis())))
+//                .path("여기 어케하지... 비워야하나")
+//                .message("성공")
+//                .error("ERROR")
+//                .status(HttpStatus.OK.value())
+//                .build();
+//
+//        return ResponseEntity.status(HttpStatus.OK.value()).body(map);
+//    }
 
     @PutMapping("/api/v1/convenience-stores/discounts/insert/gs25")
-    public ResponseEntity test(@RequestBody Gs25Dto gs25Dto){
-        Gs25Product gs25Product = gs25Dto.getResults().get(0);
+    public ResponseEntity test(@RequestBody Gs25PreDto gs25PreDto){
+        Gs25Product gs25Product = gs25PreDto.getResults().get(0);
         log.info(gs25Product.toString());
         ProductDto productDto = ProductDto.builder()
                 .name(gs25Product.getGoodsNm())
@@ -130,16 +132,20 @@ public class DiscountController {
                 .image_url(gs25Product.getAttFileId())
                 .description("상품1")
                 .build();
+
         discountService.putProduct(productDto);
 
-
-        return null;
+        return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 
-    // TODO
-    // 1. 외부 gs25에 접속해서 상품 리스트를 받아오는 api
-    // 2. 받아온 리스트를 DB에 저장할수 있게 바꾸는 api
-    // 3. 그 리스트를 저장하는 것
+    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25_2")
+    public ResponseEntity saveGs25(@RequestBody Gs25SearchDto gs25SearchDto){
+        discountService.insertGs25(gs25SearchDto);
+        return null;
+
+    }
+
+
 
 
 
