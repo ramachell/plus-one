@@ -28,6 +28,6 @@ public class ProductDto {
 
     private int discountType;
 
-    private int convenience;
+    private int convenienceStore;
 
 }

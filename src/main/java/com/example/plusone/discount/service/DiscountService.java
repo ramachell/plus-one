@@ -1,6 +1,6 @@
 package com.example.plusone.discount.service;
 
-import com.example.plusone.discount.constant.Constant;
+import com.example.plusone.discount.utils.Constant;
 import com.example.plusone.discount.dto.Gs25SearchDto;
 import com.example.plusone.discount.dto.ProductDto;
 import com.example.plusone.discount.dto.SearchDto;
@@ -11,16 +11,12 @@ import com.example.plusone.discount.mapper.DiscountMapper;
 import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.repository.ProductRepository;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -60,21 +56,29 @@ public class DiscountService {
 
     public List<ProductDto> searchProduct(SearchDto searchDto) {
 
-        List<Product> productList = productRepository.findAllByNameContainsAndDiscountType(searchDto.getQuery(),searchDto.getDiscount_type().charAt(0));
+//        log.info(searchDto.toString());
+//        log.info(String.valueOf(searchDto.getDiscount_type()));
+//        System.out.println(searchDto.getDiscount_type());
+//        log.info(searchDto.getQuery());
+
+
+        List<Product> productList = productRepository.findAllByNameContainsAndDiscountType(searchDto.getQuery(), searchDto.getDiscount_type());
+//        log.info(productList.toString());
+//        log.info(productRepository.findAllByNameContainsAndDiscountType("좋은",1).toString());
 
         return DiscountMapper.INSTANCE.toDTOs(productList);
     }
 
-    public Map<String, Object> insertGs25(Gs25SearchDto gs25SearchDto) {
+    public void insertGs25(Gs25SearchDto gs25SearchDto) {
 
-        log.info(gs25SearchDto.toString());
+//        log.info(gs25SearchDto.toString());
         Object result = openFeign.feignGetGs25(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
-        log.info(result.toString());
+//        log.info(result.toString());
         Gson gson = new Gson();
         Gs25PreDto gs25PreDto = gson.fromJson(result.toString(),Gs25PreDto.class);
         List<ProductDto> list = gs25PreDtoToProductDtos(gs25PreDto);
         putProducts(list);
-        return null;
+
     }
 
 
@@ -89,6 +93,7 @@ public class DiscountService {
                     .image_url(gs25Product.getAttFileId())
                     .price((int)gs25Product.getPrice())
                     .discountType(convertDiscountType(gs25Product.getEventTypeNm()))
+                    .convenienceStore(Constant.ConvenienceGs25)
                     .build();
 
             list.add(productDto);
@@ -97,7 +102,9 @@ public class DiscountService {
         return list;
     }
 
-    public List<ProductDto>  getProductCu() {
+    public List<ProductDto>  getProductCu(int pageIndex) {
+
+
         try {
 
             List<String> ProductCuNameList = new ArrayList<>();
@@ -105,7 +112,7 @@ public class DiscountService {
             List<String> ProductCuPriceList = new ArrayList<>();
             List<String> ProductCuDiscountTypeList = new ArrayList<>();
 
-            String url = "https://cu.bgfretail.com/event/plusAjax.do?pageIndex=2&searchCondition=23";
+            String url = "https://cu.bgfretail.com/event/plusAjax.do?pageIndex="+pageIndex;
 
             // url 로 연결후 문서 정보 가져옴
             Document doc = Jsoup.connect(url).get();
@@ -120,7 +127,7 @@ public class DiscountService {
             for (Element img : productImg){
                 // 주소가 //로 시작할 때 제거 필터
                 if(img.attr("src").startsWith("//")){
-                    ProductCuImgList.add(img.attr("src").substring(2));
+                    ProductCuImgList.add("https://" + img.attr("src").substring(2));
                 } else {
                     ProductCuImgList.add(img.attr("src"));
                 }
@@ -139,10 +146,10 @@ public class DiscountService {
                 ProductCuDiscountTypeList.add(discountType.text());
             }
 
-            log.info(ProductCuNameList.toString());
-            log.info(ProductCuPriceList.toString());
-            log.info(ProductCuImgList.toString());
-            log.info(ProductCuDiscountTypeList.toString());
+//            log.info(ProductCuNameList.toString());
+//            log.info(ProductCuPriceList.toString());
+//            log.info(ProductCuImgList.toString());
+//            log.info(ProductCuDiscountTypeList.toString());
 
             List<ProductDto> result = new ArrayList<>();
             if(ProductCuImgList.size() == ProductCuNameList.size() && ProductCuPriceList.size() == ProductCuNameList.size()){
@@ -154,7 +161,7 @@ public class DiscountService {
                                     .price(Integer.parseInt(ProductCuPriceList.get(i)))
                                     .image_url(ProductCuImgList.get(i))
                                     .discountType(convertDiscountType(ProductCuDiscountTypeList.get(i)))
-                                    .convenience(Constant.ConvenienceCu)
+                                    .convenienceStore(Constant.ConvenienceCu)
                                     .build());
 
                 }
@@ -227,7 +234,7 @@ public class DiscountService {
                                     .price(Integer.parseInt(ProductSevenElevenPriceList.get(i)))
                                     .image_url(ProductSevenElevenImgList.get(i))
                                     .discountType(convertDiscountType(ProductSevenElevenDiscountTypeList.get(i)))
-                                    .convenience(Constant.ConvenienceSevenEleven)
+                                    .convenienceStore(Constant.ConvenienceSevenEleven)
                                     .build());
 
                 }

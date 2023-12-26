@@ -1,4 +1,4 @@
-package com.example.plusone.discount.constant;
+package com.example.plusone.discount.utils;
 
 public class Constant {
     public final static int ConvenienceGs25 = 1;

@@ -5,13 +5,18 @@ import com.example.plusone.discount.dto.*;
 import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.service.DiscountService;
+import com.example.plusone.discount.utils.RequestUtils;
 import jakarta.websocket.server.PathParam;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.RequestUtil;
+import org.bouncycastle.asn1.x509.Time;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -89,11 +94,11 @@ public class DiscountController {
 //        log.info(productDtoList.toString());
 
         ResponseDto responseDto = ResponseDto.builder()
-                .code("SUCCESS")
+                .code(String.valueOf(HttpStatus.OK.value()))
                 .timestamp(String.valueOf(new Timestamp(System.currentTimeMillis())))
-                .path("여기 어케하지... 비워야하나")
-                .message("성공")
-                .error("ERROR")
+                .path(RequestUtils.getHttpServletRequest().getRequestURL().toString())
+                .message("")
+                .error("")
                 .status(HttpStatus.OK.value())
                 .data(productDtoList)
                 .build();
@@ -133,17 +138,28 @@ public class DiscountController {
         return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 
-    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25/feign")
+    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25")
     public void saveGs25(@RequestBody Gs25SearchDto gs25SearchDto){
+        log.info("insert Gs25 API");
         discountService.insertGs25(gs25SearchDto);
 
     }
 
-    @GetMapping("/api/v1/convenience-stores/discounts/get/cu/{searchCondition}")
-    public void getCuData(@PathVariable int searchCondition){
-        log.info("cu api start");
-        List<ProductDto> result = discountService.getProductCu();
+    @GetMapping("/api/v1/convenience-stores/discounts/insert/cu")
+    public void getCuData(){
+        log.info("insert Cu API");
+        int pageIndex = 1;
+        List<ProductDto> result = new ArrayList<>();
+        for(int i = 1 ; i < 3 ; i ++) {
 
+            try {
+                Thread.sleep(1000);
+                result.addAll(discountService.getProductCu(i));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            log.info(result.toString());
+        }
         discountService.putProducts(result);
     }
 

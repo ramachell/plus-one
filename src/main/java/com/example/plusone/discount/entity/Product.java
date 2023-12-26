@@ -38,7 +38,7 @@ public class Product{
     @Column(name = "discountType", length = 1)
     private int discountType;
 
-    @Column(name = "convenience", length = 10)
-    private int convenience;
+    @Column(name = "convenienceStore", length = 10)
+    private int convenienceStore;
 
 }
