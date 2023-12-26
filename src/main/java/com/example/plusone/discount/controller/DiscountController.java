@@ -5,6 +5,8 @@ import com.example.plusone.discount.dto.*;
 import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.service.DiscountService;
+import jakarta.websocket.server.PathParam;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,13 +24,6 @@ import java.util.Map;
 public class DiscountController {
 
     private final DiscountService discountService;
-
-
-
-    @RequestMapping("aaaa")
-    public void saveA(){
-
-    }
 
     @PutMapping("/api/v1/convenience-stores/discounts/putdata")
     public ResponseEntity putdata(@RequestBody Gs25PreDto gs25PreDto){
@@ -41,7 +37,7 @@ public class DiscountController {
                 .name(gs25Dto.getName())
                 .image_url(gs25Dto.getImg())
                 .price(gs25Dto.getPrice())
-                .discountType(gs25Dto.getType())
+                .discountType(gs25Dto.getType().charAt(0))
                 .build();
 
         discountService.putProduct(productDto);
@@ -79,9 +75,9 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/convenience-stores/discounts")
-    public ResponseEntity productFilter(@RequestParam String filter_discount_type){
+    public ResponseEntity productFilter(@RequestParam int discountType){
 //        log.info(filter_discount_type);
-        List<ProductDto> productDtoList = discountService.productFilter(filter_discount_type);
+        List<ProductDto> productDtoList = discountService.productFilter(discountType);
 //        log.info(productDtoList.toString());
         return ResponseEntity.status(HttpStatus.OK).body(productDtoList);
     }
@@ -130,7 +126,6 @@ public class DiscountController {
                 .name(gs25Product.getGoodsNm())
                 .price((int) gs25Product.getPrice())
                 .image_url(gs25Product.getAttFileId())
-                .description("상품1")
                 .build();
 
         discountService.putProduct(productDto);
@@ -139,10 +134,24 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25/feign")
-    public ResponseEntity saveGs25(@RequestBody Gs25SearchDto gs25SearchDto){
+    public void saveGs25(@RequestBody Gs25SearchDto gs25SearchDto){
         discountService.insertGs25(gs25SearchDto);
-        return null;
 
     }
+
+    @GetMapping("/api/v1/convenience-stores/discounts/get/cu/{searchCondition}")
+    public void getCuData(@PathVariable int searchCondition){
+        log.info("cu api start");
+        List<ProductDto> result = discountService.getProductCu();
+
+        discountService.putProducts(result);
+    }
+
+    @GetMapping("/api/v1/convenience-stores/discounts/get/SevenEleven/{intPageSize}&{intCurrPage}")
+    public void get7Eleven(@PathVariable int intPageSize, @PathVariable int intCurrPage){
+        discountService.getProductSevenEleven();
+    }
+
+
 
 }

@@ -26,16 +26,19 @@ public class Product{
     @Column(name = "price", length = 20, nullable = false)
     private int price;
 
-    @Column(name = "description", length = 200)
-    private String description;
+//    @Column(name = "description", length = 200)
+//    private String description;
+//
+//    @Column(name = "type", length = 30)
+//    private String type;
+//
+//    @Column(name = "categories", length = 20)
+//    private String categories;
 
-    @Column(name = "type", length = 30)
-    private String type;
+    @Column(name = "discountType", length = 1)
+    private int discountType;
 
-    @Column(name = "categories", length = 20)
-    private String categories;
-
-    @Column(name = "discountType", length = 10)
-    private String discountType;
+    @Column(name = "convenience", length = 10)
+    private int convenience;
 
 }

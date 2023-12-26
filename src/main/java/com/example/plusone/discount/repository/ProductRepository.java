@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, String > {
-    List<Product> findAllByDiscountType(String filterDiscountType);
+    List<Product> findAllByDiscountType(int discountType);
 
-    List<Product> findAllByNameContainsAndDiscountType(String query, String discountType);
+    List<Product> findAllByNameContainsAndDiscountType(String query, int discountType);
 }

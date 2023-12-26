@@ -20,12 +20,14 @@ public class ProductDto {
 
     private int price;
 
-    private String description;
+//    private String description;
+//
+//    private String type;
+//
+//    private String categories;
 
-    private String type;
+    private int discountType;
 
-    private String categories;
-
-    private String discountType;
+    private int convenience;
 
 }

@@ -5,12 +5,18 @@ import com.example.plusone.config.JpaConfig;
 import com.example.plusone.discount.entity.Product;
 import com.example.plusone.discount.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,7 +84,6 @@ public class DiscountJPATest {
 
                     name("김치")
                     .price(1000)
-                    .description("맛김치")
                     .build();
             productRepository.save(product);
             log.info("product id : {}", product.getId());
@@ -103,5 +108,50 @@ public class DiscountJPATest {
         } catch(Exception e) {
             log.error("error", e);
         }
+    }
+
+    @Test
+    String  getCuData() {
+        try {
+            String url = "https://cu.bgfretail.com/event/plusAjax.do?pageIndex=2&searchCondition=23";
+
+            // Jsoup을 사용하여 웹 페이지에 연결합니다.
+            Document doc = Jsoup.connect(url).get();
+
+            // 원하는 정보를 선택합니다.
+            Elements productInfo = doc.select("div.name");
+
+            // 가져온 정보를 처리합니다.
+            StringBuilder result = new StringBuilder();
+            for (Element info : productInfo) {
+                result.append(info.text()).append("\n"); // 필요한 정보를 가져와서 결과에 추가합니다.
+            }
+
+            return result.toString(); // 결과 반환
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error occurred during crawling.";
+        }
+
+    }
+    @Test
+    void test(){
+        List<String> list = new ArrayList<>();
+        list.add("//aaaa/bbbb");
+        list.add("aaaa/cccc");
+        for(String src : list) {
+            if(src.startsWith("//")){
+                log.info(src.substring(2));
+            } else{
+                log.info(src);
+            }
+
+        }
+    }
+
+    @Test
+    void test2(){
+        String aa = "abcde";
+        log.info(String.valueOf(aa.charAt(0)));
     }
 }
