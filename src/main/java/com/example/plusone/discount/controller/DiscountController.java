@@ -6,22 +6,15 @@ import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.service.DiscountService;
 import com.example.plusone.discount.utils.RequestUtils;
-import jakarta.websocket.server.PathParam;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.RequestUtil;
-import org.bouncycastle.asn1.x509.Time;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -146,11 +139,13 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/convenience-stores/discounts/insert/cu")
-    public void getCuData(){
+    public int getCuData(@RequestParam int pageIndex){
         log.info("insert Cu API");
-        int pageIndex = 1;
+
         List<ProductDto> result = new ArrayList<>();
-        for(int i = 1 ; i < 3 ; i ++) {
+
+//        result= discountService.getProductCu(pageIndex);
+        for(int i = 1 ; i < 36 ; i ++) {
 
             try {
                 Thread.sleep(1000);
@@ -161,6 +156,7 @@ public class DiscountController {
             log.info(result.toString());
         }
         discountService.putProducts(result);
+        return result.size();
     }
 
     @GetMapping("/api/v1/convenience-stores/discounts/get/SevenEleven/{intPageSize}&{intCurrPage}")

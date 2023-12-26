@@ -123,7 +123,7 @@ public class DiscountService {
                 ProductCuNameList.add(name.text());
             }
             // img src 가져오기
-            Elements productImg = doc.getElementsByTag("img");
+            Elements productImg = doc.select("img.prod_img");
             for (Element img : productImg){
                 // 주소가 //로 시작할 때 제거 필터
                 if(img.attr("src").startsWith("//")){
@@ -146,10 +146,12 @@ public class DiscountService {
                 ProductCuDiscountTypeList.add(discountType.text());
             }
 
-//            log.info(ProductCuNameList.toString());
-//            log.info(ProductCuPriceList.toString());
-//            log.info(ProductCuImgList.toString());
-//            log.info(ProductCuDiscountTypeList.toString());
+            log.info(ProductCuNameList.toString());
+            log.info(ProductCuPriceList.toString());
+            log.info(ProductCuImgList.toString());
+            log.info(ProductCuDiscountTypeList.toString());
+
+            log.info(String.valueOf(ProductCuNameList.size()) + ProductCuPriceList.size() + ProductCuImgList.size() + ProductCuDiscountTypeList.size());
 
             List<ProductDto> result = new ArrayList<>();
             if(ProductCuImgList.size() == ProductCuNameList.size() && ProductCuPriceList.size() == ProductCuNameList.size()){
