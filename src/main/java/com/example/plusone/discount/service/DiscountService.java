@@ -19,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -40,11 +41,12 @@ public class DiscountService {
 
     }
 
-    public void putProducts(List<ProductDto> productDtoList) {
+    public int putProducts(List<ProductDto> productDtoList) {
         List<Product> productList =  DiscountMapper.INSTANCE.toEntities(productDtoList);
         for (Product product : productList) {
             productRepository.save(product);
         }
+        return productList.size();
     }
 
     public ProductDto getProduct(String id) {
@@ -56,31 +58,21 @@ public class DiscountService {
 
     public List<ProductDto> searchProduct(SearchDto searchDto) {
 
-//        log.info(searchDto.toString());
-//        log.info(String.valueOf(searchDto.getDiscount_type()));
-//        System.out.println(searchDto.getDiscount_type());
-//        log.info(searchDto.getQuery());
 
 
         List<Product> productList = productRepository.findAllByNameContainsAndDiscountType(searchDto.getQuery(), searchDto.getDiscount_type());
-//        log.info(productList.toString());
-//        log.info(productRepository.findAllByNameContainsAndDiscountType("좋은",1).toString());
 
         return DiscountMapper.INSTANCE.toDTOs(productList);
     }
 
-    public void insertGs25(Gs25SearchDto gs25SearchDto) {
-
-//        log.info(gs25SearchDto.toString());
+    public List<ProductDto> GetProductGs25(Gs25SearchDto gs25SearchDto) {
         Object result = openFeign.feignGetGs25(gs25SearchDto.getPageNum(),gs25SearchDto.getPageSize(),gs25SearchDto.getSearchType());
-//        log.info(result.toString());
+
         Gson gson = new Gson();
         Gs25PreDto gs25PreDto = gson.fromJson(result.toString(),Gs25PreDto.class);
-        List<ProductDto> list = gs25PreDtoToProductDtos(gs25PreDto);
-        putProducts(list);
 
+        return gs25PreDtoToProductDtos(gs25PreDto);
     }
-
 
     public List<ProductDto> gs25PreDtoToProductDtos(Gs25PreDto gs25PreDto){
 
@@ -93,7 +85,7 @@ public class DiscountService {
                     .image_url(gs25Product.getAttFileId())
                     .price((int)gs25Product.getPrice())
                     .discountType(convertDiscountType(gs25Product.getEventTypeNm()))
-                    .convenienceStore(Constant.ConvenienceGs25)
+                    .convenienceStore(Constant.CONVENIENCE_GS25)
                     .build();
 
             list.add(productDto);
@@ -104,15 +96,18 @@ public class DiscountService {
 
     public List<ProductDto>  getProductCu(int pageIndex) {
 
-
+        List<ProductDto> result = new ArrayList<>();
         try {
+        for(int i = 0 ; i < pageIndex ; i++) {
 
-            List<String> ProductCuNameList = new ArrayList<>();
-            List<String> ProductCuImgList = new ArrayList<>();
-            List<String> ProductCuPriceList = new ArrayList<>();
-            List<String> ProductCuDiscountTypeList = new ArrayList<>();
+            Thread.sleep(100);
 
-            String url = "https://cu.bgfretail.com/event/plusAjax.do?pageIndex="+pageIndex;
+            List<String> productCuNameList = new ArrayList<>();
+            List<String> productCuImgList = new ArrayList<>();
+            List<String> productCuPriceList = new ArrayList<>();
+            List<String> productCuDiscountTypeList = new ArrayList<>();
+
+            String url = "https://cu.bgfretail.com/event/plusAjax.do?pageIndex=" + i;
 
             // url 로 연결후 문서 정보 가져옴
             Document doc = Jsoup.connect(url).get();
@@ -120,62 +115,61 @@ public class DiscountService {
             // 원하는 html 요소만 선택 후 필요한 값 만 List 에 담기
             Elements productName = doc.select("div.name");
             for (Element name : productName) {
-                ProductCuNameList.add(name.text());
+                productCuNameList.add(name.text());
             }
             // img src 가져오기
             Elements productImg = doc.select("img.prod_img");
-            for (Element img : productImg){
+            for (Element img : productImg) {
                 // 주소가 //로 시작할 때 제거 필터
-                if(img.attr("src").startsWith("//")){
-                    ProductCuImgList.add("https://" + img.attr("src").substring(2));
+                if (img.attr("src").startsWith("//")) {
+                    productCuImgList.add("https://" + img.attr("src").substring(2));
                 } else {
-                    ProductCuImgList.add(img.attr("src"));
+                    productCuImgList.add(img.attr("src"));
                 }
             }
             // price 가져오기
             Elements productPrice = doc.select("div.price");
-            for (Element price : productPrice){
+            for (Element price : productPrice) {
                 // "원" 과 "," 제거
-                ProductCuPriceList.add(price.text().replace("원","").replace(",",""));
+                productCuPriceList.add(price.text().replace("원", "").replace(",", ""));
             }
 
             // 할인 타입 (2+1, 1+1)
             Elements productDiscountType = doc.select("div.badge");
-            for (Element discountType : productDiscountType){
+            for (Element discountType : productDiscountType) {
 
-                ProductCuDiscountTypeList.add(discountType.text());
+                productCuDiscountTypeList.add(discountType.text());
             }
 
-            log.info(ProductCuNameList.toString());
-            log.info(ProductCuPriceList.toString());
-            log.info(ProductCuImgList.toString());
-            log.info(ProductCuDiscountTypeList.toString());
+            log.info(productCuNameList.toString());
+            log.info(productCuPriceList.toString());
+            log.info(productCuImgList.toString());
+            log.info(productCuDiscountTypeList.toString());
 
-            log.info(String.valueOf(ProductCuNameList.size()) + ProductCuPriceList.size() + ProductCuImgList.size() + ProductCuDiscountTypeList.size());
+            log.info(String.valueOf(productCuNameList.size()) + productCuPriceList.size() + productCuImgList.size() + productCuDiscountTypeList.size());
 
-            List<ProductDto> result = new ArrayList<>();
-            if(ProductCuImgList.size() == ProductCuNameList.size() && ProductCuPriceList.size() == ProductCuNameList.size()){
-                for(int i = 0 ; i < ProductCuImgList.size() ; i++ ){
 
-                    result.add(
-                            ProductDto.builder()
-                                    .name(ProductCuNameList.get(i))
-                                    .price(Integer.parseInt(ProductCuPriceList.get(i)))
-                                    .image_url(ProductCuImgList.get(i))
-                                    .discountType(convertDiscountType(ProductCuDiscountTypeList.get(i)))
-                                    .convenienceStore(Constant.ConvenienceCu)
-                                    .build());
+            if (productCuImgList.size() == productCuNameList.size() && productCuPriceList.size() == productCuNameList.size() && productCuDiscountTypeList.size() == productCuNameList.size()) {
+                for (int j = 0; j < productCuImgList.size(); j++) {
 
+                    result.add(ProductDto.builder()
+                            .name(productCuNameList.get(i))
+                            .price(Integer.parseInt(productCuPriceList.get(i)))
+                            .image_url(productCuImgList.get(i))
+                            .discountType(convertDiscountType(productCuDiscountTypeList.get(i)))
+                            .convenienceStore(Constant.CONVENIENCE_CU)
+                            .build());
                 }
             }
-
-            log.info(result.toString());
-
-            return result; // 결과 반환
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     int convertDiscountType(String type){
@@ -188,66 +182,66 @@ public class DiscountService {
         }
     }
 
-    public void getProductSevenEleven() {
+    // intPageSize 입력은 intCurrPage 가 2이상일 때부터 제대로 작동 하므로
+    // intCurrPage = 0 일때랑 1일때는 따로 처리를 해줘야 함
+    public List<ProductDto> getProductSevenEleven(int pTab, int intPageSize, int intCurrPage) {
+        List<ProductDto> result = new ArrayList<>();
         try {
 
-            List<String> ProductSevenElevenNameList = new ArrayList<>();
-            List<String> ProductSevenElevenPriceList = new ArrayList<>();
-            List<String> ProductSevenElevenImgList = new ArrayList<>();
-            List<String> ProductSevenElevenDiscountTypeList = new ArrayList<>();
+            List<String> productSevenElevenNameList = new ArrayList<>();
+            List<String> productSevenElevenPriceList = new ArrayList<>();
+            List<String> productSevenElevenImgList = new ArrayList<>();
+            List<String> productSevenElevenDiscountTypeList = new ArrayList<>();
 
 
-            String url = "https://www.7-eleven.co.kr/product/listMoreAjax.asp?intPageSize=10&pTab=1";
+            String url = "https://www.7-eleven.co.kr/product/listMoreAjax.asp?intPageSize="+intPageSize+"&pTab=" + pTab + "&intCurrPage=" + intCurrPage;
             Document doc = Jsoup.connect(url).get();
 
             Elements productName = doc.select("div.name");
             for (Element name : productName) {
-                ProductSevenElevenNameList.add(name.text());
+                productSevenElevenNameList.add(name.text());
             }
 
             Elements productPrice = doc.select("div.price");
             for (Element price : productPrice) {
-                ProductSevenElevenPriceList.add(price.text().replace(",",""));
+                productSevenElevenPriceList.add(price.text().replace(",",""));
             }
 
             Elements productImg = doc.getElementsByTag("img");
             for (Element img : productImg){
-                ProductSevenElevenImgList.add("https://www.7-eleven.co.kr" + img.attr("src"));
+                productSevenElevenImgList.add("https://www.7-eleven.co.kr" + img.attr("src"));
             }
 
-            Elements productDiscountType = doc.select("li.ico_tag_06");
+            Elements productDiscountType = doc.select("ul.tag_list_01");
             for (Element discountType : productDiscountType) {
-                ProductSevenElevenDiscountTypeList.add(discountType.text());
+                productSevenElevenDiscountTypeList.add(discountType.text());
             }
 
 
-            log.info(ProductSevenElevenNameList.toString());
-            log.info(ProductSevenElevenPriceList.toString());
-            log.info(ProductSevenElevenImgList.toString());
-            log.info(ProductSevenElevenDiscountTypeList.toString());
+            log.info(productSevenElevenNameList.toString());
+            log.info(productSevenElevenPriceList.toString());
+            log.info(productSevenElevenImgList.toString());
+            log.info(productSevenElevenDiscountTypeList.toString());
 
-            List<ProductDto> result = new ArrayList<>();
-            if(ProductSevenElevenImgList.size() == ProductSevenElevenNameList.size() && ProductSevenElevenPriceList.size() == ProductSevenElevenNameList.size()){
-                for(int i = 0 ; i < ProductSevenElevenImgList.size() ; i++ ){
+            if(productSevenElevenImgList.size() == productSevenElevenNameList.size() && productSevenElevenPriceList.size() == productSevenElevenNameList.size() && productSevenElevenDiscountTypeList.size() == productSevenElevenNameList.size()){
+                for(int i = 0 ; i < productSevenElevenImgList.size() ; i++ ){
 
                     result.add(
                             ProductDto.builder()
-                                    .name(ProductSevenElevenNameList.get(i))
-                                    .price(Integer.parseInt(ProductSevenElevenPriceList.get(i)))
-                                    .image_url(ProductSevenElevenImgList.get(i))
-                                    .discountType(convertDiscountType(ProductSevenElevenDiscountTypeList.get(i)))
-                                    .convenienceStore(Constant.ConvenienceSevenEleven)
+                                    .name(productSevenElevenNameList.get(i))
+                                    .price(Integer.parseInt(productSevenElevenPriceList.get(i)))
+                                    .image_url(productSevenElevenImgList.get(i))
+                                    .discountType(convertDiscountType(productSevenElevenDiscountTypeList.get(i)))
+                                    .convenienceStore(Constant.CONVENIENCE_SEVEN_ELEVEN)
                                     .build());
 
                 }
             }
             log.info(result.toString());
-
-
-        } catch (Exception e){
+        } catch (IOException e){
             e.printStackTrace();
         }
-
+        return result;
 
 
     }

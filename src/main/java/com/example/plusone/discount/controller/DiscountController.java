@@ -43,13 +43,6 @@ public class DiscountController {
         return null;
     }
 
-    @PostMapping("/api/v1/convenience-stores/discounts/insert/7_eleven")
-    public ResponseEntity insert7_eleven(){
-        // 비상... gs25랑은 너무나 다른방식....
-
-        return null;
-    }
-
     @PutMapping("/api/v1/convenience-stores/discounts")
     public ResponseEntity saveProduct(@RequestBody ProductDto productDto){
 //        log.info(productDto.toString());
@@ -65,6 +58,10 @@ public class DiscountController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * @param id 상품 id
+     * @return 상품 1개의 정보
+     */
     @GetMapping("/api/v1/convenience-stores/discounts/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable String id){
         ProductDto productDto = discountService.getProduct(id);
@@ -72,6 +69,7 @@ public class DiscountController {
 
     }
 
+    // discount type에 따라서 결과 return
     @GetMapping("/api/v1/convenience-stores/discounts")
     public ResponseEntity productFilter(@RequestParam int discountType){
 //        log.info(filter_discount_type);
@@ -100,70 +98,32 @@ public class DiscountController {
     }
 
 
-//    @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25")
-//    public ResponseEntity insertGs25(){
-//        Map<String,Object> map = discountService.insertGs25();
-//
-//        ResponseDto<Object> responseDto = ResponseDto.builder()
-//                .code("SUCCESS")
-//                .timestamp(String.valueOf(new Timestamp(System.currentTimeMillis())))
-//                .path("여기 어케하지... 비워야하나")
-//                .message("성공")
-//                .error("ERROR")
-//                .status(HttpStatus.OK.value())
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.OK.value()).body(map);
-//    }
-
-    @PutMapping("/api/v1/convenience-stores/discounts/insert/gs25")
-    public ResponseEntity test(@RequestBody Gs25PreDto gs25PreDto){
-        Gs25Product gs25Product = gs25PreDto.getResults().get(0);
-        log.info(gs25Product.toString());
-        ProductDto productDto = ProductDto.builder()
-                .name(gs25Product.getGoodsNm())
-                .price((int) gs25Product.getPrice())
-                .image_url(gs25Product.getAttFileId())
-                .build();
-
-        discountService.putProduct(productDto);
-
-        return ResponseEntity.status(HttpStatus.OK.value()).build();
-    }
 
     @GetMapping("/api/v1/convenience-stores/discounts/insert/gs25")
-    public void saveGs25(@RequestBody Gs25SearchDto gs25SearchDto){
+    public int insertProductGs25(@RequestBody Gs25SearchDto gs25SearchDto){
         log.info("insert Gs25 API");
-        discountService.insertGs25(gs25SearchDto);
-
-    }
-
-    @GetMapping("/api/v1/convenience-stores/discounts/insert/cu")
-    public int getCuData(@RequestParam int pageIndex){
-        log.info("insert Cu API");
-
-        List<ProductDto> result = new ArrayList<>();
-
-//        result= discountService.getProductCu(pageIndex);
-        for(int i = 1 ; i < 36 ; i ++) {
-
-            try {
-                Thread.sleep(1000);
-                result.addAll(discountService.getProductCu(i));
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            log.info(result.toString());
-        }
+        List<ProductDto> result = discountService.GetProductGs25(gs25SearchDto);
         discountService.putProducts(result);
         return result.size();
     }
 
-    @GetMapping("/api/v1/convenience-stores/discounts/get/SevenEleven/{intPageSize}&{intCurrPage}")
-    public void get7Eleven(@PathVariable int intPageSize, @PathVariable int intCurrPage){
-        discountService.getProductSevenEleven();
+    @GetMapping("/api/v1/convenience-stores/discounts/insert/cu")
+    public int insertProductCu(@RequestParam int pageIndex){
+        log.info("insert Cu API");
+
+        List<ProductDto> result = discountService.getProductCu(pageIndex);
+        discountService.putProducts(result);
+        return result.size();
     }
 
-
-
+    @GetMapping("/api/v1/convenience-stores/discounts/insert/sevenEleven")
+    public int insertProductSevenEleven(@RequestParam int pTab, @RequestParam int intPageSize){
+        log.info("insert SevenEleven Api");
+        List<ProductDto> result = new ArrayList<>();
+        result.addAll(discountService.getProductSevenEleven(pTab,10,0));
+        result.addAll(discountService.getProductSevenEleven(pTab,10,1));
+        result.addAll(discountService.getProductSevenEleven(pTab,intPageSize,2));
+        discountService.putProducts(result);
+        return result.size();
+    }
 }
