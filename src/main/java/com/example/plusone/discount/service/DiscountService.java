@@ -82,7 +82,7 @@ public class DiscountService {
             Gs25Product gs25Product = gs25PreDto.getResults().get(i);
             ProductDto productDto = ProductDto.builder()
                     .name(gs25Product.getGoodsNm())
-                    .image_url(gs25Product.getAttFileId())
+                    .image_url(gs25Product.getAttFileNm())
                     .price((int)gs25Product.getPrice())
                     .discountType(convertDiscountType(gs25Product.getEventTypeNm()))
                     .convenienceStore(Constant.CONVENIENCE_GS25)
@@ -153,10 +153,10 @@ public class DiscountService {
                 for (int j = 0; j < productCuImgList.size(); j++) {
 
                     result.add(ProductDto.builder()
-                            .name(productCuNameList.get(i))
-                            .price(Integer.parseInt(productCuPriceList.get(i)))
-                            .image_url(productCuImgList.get(i))
-                            .discountType(convertDiscountType(productCuDiscountTypeList.get(i)))
+                            .name(productCuNameList.get(j))
+                            .price(Integer.parseInt(productCuPriceList.get(j)))
+                            .image_url(productCuImgList.get(j))
+                            .discountType(convertDiscountType(productCuDiscountTypeList.get(j)))
                             .convenienceStore(Constant.CONVENIENCE_CU)
                             .build());
                 }

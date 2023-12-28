@@ -120,6 +120,7 @@ public class DiscountController {
     public int insertProductSevenEleven(@RequestParam int pTab, @RequestParam int intPageSize){
         log.info("insert SevenEleven Api");
         List<ProductDto> result = new ArrayList<>();
+        // intCurrPage가 0,1일때는 intPageSize 가 제대로 작동을 안해서 따로 실행해야함
         result.addAll(discountService.getProductSevenEleven(pTab,10,0));
         result.addAll(discountService.getProductSevenEleven(pTab,10,1));
         result.addAll(discountService.getProductSevenEleven(pTab,intPageSize,2));
