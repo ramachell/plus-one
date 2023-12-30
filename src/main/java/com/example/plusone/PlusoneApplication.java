@@ -1,7 +1,6 @@
 package com.example.plusone;
 
-import com.example.plusone.gs25.entity.gs25Entity;
-import com.example.plusone.gs25.repository.gs25Repository;
+
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

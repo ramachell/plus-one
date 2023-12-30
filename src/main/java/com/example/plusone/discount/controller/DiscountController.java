@@ -5,7 +5,9 @@ import com.example.plusone.discount.dto.*;
 import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.service.DiscountService;
+import com.example.plusone.discount.service.ProductService;
 import com.example.plusone.discount.utils.RequestUtils;
+import com.example.plusone.kakaochat.service.DiscountProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,21 @@ public class DiscountController {
 
     private final DiscountService discountService;
 
+    private final DiscountProductService discountProductService;
+
+    @GetMapping("/apitest")
+    public String testString(@RequestBody SearchDto searchDto){
+        return discountProductService.makeProductJson(searchDto);
+
+    }
+    @GetMapping("/chattest")
+    public String chatTest(@RequestBody String str){
+        log.info(str);
+        return "test connection success";
+    }
+
     @PutMapping("/api/v1/convenience-stores/discounts/putdata")
-    public ResponseEntity putdata(@RequestBody Gs25PreDto gs25PreDto){
+    public ResponseEntity putData(@RequestBody Gs25PreDto gs25PreDto){
         return null;
     }
 

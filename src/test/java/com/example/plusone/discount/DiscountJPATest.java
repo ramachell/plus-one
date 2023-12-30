@@ -15,10 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Import({JpaConfig.class})
@@ -38,13 +35,11 @@ public class DiscountJPATest {
         try {
 
 
-            Product product = Product.
-                    builder().
-                    name("김치").build();
+            Product product = Product.builder().name("김치").build();
             productRepository.save(product);
             log.info("product id : {}", product.getId());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("error", e);
         }
     }
@@ -64,13 +59,13 @@ public class DiscountJPATest {
                 throw new Exception("product is empty");
             } else {
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("error", e);
         }
     }
 
     @Test
-    void testCreateAndRead(){
+    void testCreateAndRead() {
         log.info("test3");
 
 
@@ -79,18 +74,15 @@ public class DiscountJPATest {
             String id = UUID.randomUUID().toString();
             log.info(id);
 
-            Product product = Product.
-                    builder().
+            Product product = Product.builder().
 
-                    name("김치")
-                    .price(1000)
-                    .build();
+                    name("김치").price(1000).build();
             productRepository.save(product);
             log.info("product id : {}", product.getId());
-            log.info("take 1 : {}" , id);
-            log.info("take 2 : {}" , id);
-            log.info("take 3 : {}" , id);
-            log.info("take 4 : {}" , id);
+            log.info("take 1 : {}", id);
+            log.info("take 2 : {}", id);
+            log.info("take 3 : {}", id);
+            log.info("take 4 : {}", id);
 
             Optional<Product> product2 = productRepository.findById(id);
             log.info(product2.toString());
@@ -99,19 +91,19 @@ public class DiscountJPATest {
             } else {
                 log.info("product2 is : {}", product2.get().toString());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("error", e);
         }
 
         try {
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("error", e);
         }
     }
 
     @Test
-    String  getCuData() {
+    String getCuData() {
         try {
             String url = "https://cu.bgfretail.com/event/plusAjax.do?pageIndex=2&searchCondition=23";
 
@@ -134,24 +126,20 @@ public class DiscountJPATest {
         }
 
     }
+
     @Test
-    void test(){
+    void test() {
         List<String> list = new ArrayList<>();
         list.add("//aaaa/bbbb");
         list.add("aaaa/cccc");
-        for(String src : list) {
-            if(src.startsWith("//")){
+        for (String src : list) {
+            if (src.startsWith("//")) {
                 log.info(src.substring(2));
-            } else{
+            } else {
                 log.info(src);
             }
 
         }
     }
 
-    @Test
-    void test2(){
-        String aa = "abcde";
-        log.info(String.valueOf(aa.charAt(0)));
-    }
 }
