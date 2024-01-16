@@ -18,6 +18,7 @@ public class KakaoRequestDto {
     // 생성자, getter 및 setter
 
     @Getter
+    @ToString
     public static class Intent {
         private String id;
         private String name;
@@ -26,6 +27,7 @@ public class KakaoRequestDto {
     }
 
     @Getter
+    @ToString
     public static class UserRequestData {
         private String timezone;
         private Map<String, String> params;
@@ -38,6 +40,7 @@ public class KakaoRequestDto {
     }
 
     @Getter
+    @ToString
     public static class Block {
         private String id;
         private String name;
@@ -45,6 +48,7 @@ public class KakaoRequestDto {
         // 생성자, getter 및 setter
     }
     @Getter
+    @ToString
     public static class User {
         private String id;
         private String type;
@@ -54,6 +58,7 @@ public class KakaoRequestDto {
     }
 
     @Getter
+    @ToString
     public static class Bot {
         private String id;
         private String name;
@@ -62,6 +67,7 @@ public class KakaoRequestDto {
     }
 
     @Getter
+    @ToString
     public static class Action {
         private String name;
         private Object clientExtra;
@@ -73,6 +79,7 @@ public class KakaoRequestDto {
     }
 
     @Getter
+    @ToString
     public static class DetailParams {
         private String origin;
         private String value;
@@ -82,6 +89,7 @@ public class KakaoRequestDto {
     }
 
     @Getter
+    @ToString
     public static class Param{
         private String query;
         private int discount_type;

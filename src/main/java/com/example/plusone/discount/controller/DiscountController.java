@@ -5,12 +5,10 @@ import com.example.plusone.discount.dto.*;
 import com.example.plusone.discount.gs25.dto.Gs25PreDto;
 import com.example.plusone.discount.service.DiscountService;
 import com.example.plusone.discount.utils.RequestUtils;
-import com.example.plusone.kakaochat.dto.KakaoRequestDto;
-import com.example.plusone.kakaochat.dto.KakaoResponse;
-import com.example.plusone.kakaochat.dto.KakaoResponseDto;
-import com.example.plusone.kakaochat.dto.KakaoTemplate;
+import com.example.plusone.kakaochat.dto.*;
 import com.example.plusone.kakaochat.service.DiscountKakaoService;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,9 +88,39 @@ public class DiscountController {
 
 
     @RequestMapping("/test2con")
-    public String confirm(){
+    public String confirm(@RequestBody KakaoTimeDto dto){
         log.info("confirm?");
-        return "success";
+        log.info(dto.toString());
+        /*
+        {
+             "status": "SUCCESS",
+                 "value": "a",
+                 "data": {
+             "extracted": "a"
+            }
+        }
+        */
+        String time = dto.getValue().getOrigin();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.KOREA);
+        LocalDate localDate;
+
+        // 문자열을 LocalDate로 변환
+        localDate = LocalDate.parse(time, formatter);
+
+
+        JsonObject noNamed = new JsonObject();
+
+        noNamed.addProperty("status", "SUCCESS");
+
+        noNamed.addProperty("value",localDate.toString());
+        JsonObject data = new JsonObject();
+        data.addProperty("extracted",localDate.toString());
+        noNamed.add("data",data);
+
+        log.info(noNamed.toString());
+
+        return noNamed.toString().replace("\\/","/");
     }
 
     @PostMapping("/test2")
@@ -101,36 +129,19 @@ public class DiscountController {
 
         log.info("date api");
 
-        log.info(kakaoRequestDto.getAction().getParams().toString());
-        log.info(kakaoRequestDto.getAction().getParams().toString());
+        log.info(kakaoRequestDto.toString());
 
-        LocalDate datek = kakaoRequestDto.getAction().getParams().getSys_date_params();
+        LocalDate date = kakaoRequestDto.getAction().getParams().getSys_date_params();
 
-//        log.info(map.toString());
-//        log.info(map.get("year").toString());
-//        log.info(map.get("month").toString());
-//        log.info(map.get("day").toString());
-
-//        String year = (String) map.get("year");
-//        String month = (String) map.get("month");
-//        String day = (String) map.get("day");;
-
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.print("날짜를 입력하세요 (예: 2024-01-12): ");
-//        String dateString = scanner.next();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
-//        LocalDate date = LocalDate.parse(year+"-"+month+"-"+day,formatter);
-
-
-        // 입력된 문자열을 LocalDate로 변환
-//        LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
 
         // 해당 날짜의 요일 얻기
-        DayOfWeek dayOfWeek = datek.getDayOfWeek();
+
+        String[] days = {"월","화","수","목","금","토","일"};
+        String result = days[date.getDayOfWeek().getValue()-1];
 
         // 결과 출력
-        System.out.println("입력한 날짜: " + datek);
-        System.out.println("해당 날짜의 요일: " + dayOfWeek);
+        System.out.println("입력한 날짜: " + date);
+        System.out.println("해당 날짜의 요일: " + result);
 
         JSONObject response = new JSONObject();
         response.put("version","2.0");
@@ -148,7 +159,7 @@ public class DiscountController {
         noNamed.put("simpleText", simpleText);
         outputs.add(noNamed);
 
-        simpleText.put("text",dayOfWeek.toString());
+        simpleText.put("text",result+"요일 입니다");
 
         return response.toJSONString().replace("\\/","/");
     }
