@@ -59,9 +59,9 @@ public class DiscountService {
     public List<ProductDto> searchProduct(SearchDto searchDto) {
 
 
-
+        log.info("service : searchDto : " + searchDto);
         List<Product> productList = productRepository.findAllByNameContainsAndDiscountType(searchDto.getQuery(), searchDto.getDiscount_type());
-
+        log.info("service : ProductDtoList : " + productList);
         return DiscountMapper.INSTANCE.toDTOs(productList);
     }
 
@@ -82,7 +82,7 @@ public class DiscountService {
             Gs25Product gs25Product = gs25PreDto.getResults().get(i);
             ProductDto productDto = ProductDto.builder()
                     .name(gs25Product.getGoodsNm())
-                    .image_url(gs25Product.getAttFileNm())
+                    .imageUrl(gs25Product.getAttFileNm())
                     .price((int)gs25Product.getPrice())
                     .discountType(convertDiscountType(gs25Product.getEventTypeNm()))
                     .convenienceStore(Constant.CONVENIENCE_GS25)
@@ -155,7 +155,7 @@ public class DiscountService {
                     result.add(ProductDto.builder()
                             .name(productCuNameList.get(j))
                             .price(Integer.parseInt(productCuPriceList.get(j)))
-                            .image_url(productCuImgList.get(j))
+                            .imageUrl(productCuImgList.get(j))
                             .discountType(convertDiscountType(productCuDiscountTypeList.get(j)))
                             .convenienceStore(Constant.CONVENIENCE_CU)
                             .build());
@@ -230,7 +230,7 @@ public class DiscountService {
                             ProductDto.builder()
                                     .name(productSevenElevenNameList.get(i))
                                     .price(Integer.parseInt(productSevenElevenPriceList.get(i)))
-                                    .image_url(productSevenElevenImgList.get(i))
+                                    .imageUrl(productSevenElevenImgList.get(i))
                                     .discountType(convertDiscountType(productSevenElevenDiscountTypeList.get(i)))
                                     .convenienceStore(Constant.CONVENIENCE_SEVEN_ELEVEN)
                                     .build());

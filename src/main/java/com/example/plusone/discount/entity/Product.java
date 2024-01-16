@@ -20,8 +20,8 @@ public class Product{
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "image_url", length = 200)
-    private String image_url;
+    @Column(name = "imageUrl", length = 200)
+    private String imageUrl;
 
     @Column(name = "price", length = 20, nullable = false)
     private int price;

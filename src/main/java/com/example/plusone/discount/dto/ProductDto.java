@@ -16,15 +16,9 @@ public class ProductDto {
 
     private String name;
 
-    private String image_url;
+    private String imageUrl;
 
     private int price;
-
-//    private String description;
-//
-//    private String type;
-//
-//    private String categories;
 
     private int discountType;
 

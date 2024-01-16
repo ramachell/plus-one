@@ -126,7 +126,6 @@ public class DiscountJPATest {
         }
 
     }
-
     @Test
     void test() {
         List<String> list = new ArrayList<>();

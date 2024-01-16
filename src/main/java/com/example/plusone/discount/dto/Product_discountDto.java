@@ -14,7 +14,7 @@ public class Product_discountDto {
 
     private String name;
 
-    private String image_url;
+    private String imageUrl;
 
     private int price;
 

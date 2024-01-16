@@ -11,5 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SearchDto {
     private String query;
+    private int ConvenienceStore;
     private int discount_type;
+
 }
