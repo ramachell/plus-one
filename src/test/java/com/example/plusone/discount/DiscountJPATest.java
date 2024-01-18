@@ -11,10 +11,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.format.DateTimeFormatters;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 @Slf4j
@@ -140,5 +145,35 @@ public class DiscountJPATest {
 
         }
     }
+    @Test
+    void test2(){
+        testDate("2024년 1월 20일");
+        testDate("2024년1월 20일");
+        testDate("2024-1-24");
+    }
+
+    String converter(String date){
+        return date.replaceAll(" ","");
+    }
+    void testDate(String date){
+
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy년M월d일")
+                .optionalStart()
+                .appendPattern("yyyy년 M월 d일")
+                .optionalEnd()
+                .optionalStart()
+                .appendPattern("yyyy-M-d")
+                .optionalEnd()
+                .parseDefaulting(ChronoField.YEAR, 0)
+                .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                .toFormatter(Locale.KOREA);
+
+
+        LocalDate resultDate = LocalDate.parse(converter(date),formatter);
+        log.info(resultDate.toString());
+    }
+
 
 }

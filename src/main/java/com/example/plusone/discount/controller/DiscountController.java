@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 
 @RestController
@@ -101,12 +102,17 @@ public class DiscountController {
         }
         */
         String time = dto.getValue().getOrigin();
+        time = time.replaceAll(" ","");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.KOREA);
-        LocalDate localDate;
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy년M월d일")
+                .optionalStart()
+                .appendPattern("yyyy-M-d")
+                .optionalEnd()
+                .toFormatter(Locale.KOREA);
 
         // 문자열을 LocalDate로 변환
-        localDate = LocalDate.parse(time, formatter);
+        LocalDate localDate = LocalDate.parse(time, formatter);
 
 
         JsonObject noNamed = new JsonObject();
