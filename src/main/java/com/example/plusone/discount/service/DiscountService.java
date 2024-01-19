@@ -10,9 +10,14 @@ import com.example.plusone.discount.gs25.dto.Gs25Product;
 import com.example.plusone.discount.mapper.DiscountMapper;
 import com.example.plusone.discount.openfeign.OpenFeign;
 import com.example.plusone.discount.repository.ProductRepository;
+import com.example.plusone.kakaochat.dto.KakaoRequestDto;
+import com.example.plusone.kakaochat.dto.KakaoTimeDto;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,6 +25,9 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 
 @Service
@@ -245,4 +253,108 @@ public class DiscountService {
 
 
     }
+
+    public String confirmDate(KakaoTimeDto dto) {
+        log.info(dto.toString());
+        /*
+        {
+             "status": "SUCCESS",
+                 "value": "a",
+                 "data": {
+             "extracted": "a"
+            }
+        }
+        */
+        String time = dto.getValue().getOrigin();
+        time = time.replaceAll(" ","");
+
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy년M월d일")
+                .toFormatter(Locale.KOREA);
+
+        // 문자열을 LocalDate로 변환
+        LocalDate localDate = LocalDate.parse(time, formatter);
+
+        JsonObject noNamed = new JsonObject();
+
+        noNamed.addProperty("status", "SUCCESS");
+
+        noNamed.addProperty("value",localDate.toString());
+        JsonObject data = new JsonObject();
+        data.addProperty("extracted",localDate.toString());
+        noNamed.add("data",data);
+
+        log.info(noNamed.toString());
+
+        return noNamed.toString().replace("\\/","/");
+    }
+
+    public String getLottoNumber(KakaoRequestDto kakaoRequestDto) {
+        JSONObject response = new JSONObject();
+        response.put("version","2.0");
+
+        JSONObject template = new JSONObject();
+        response.put("template",template);
+
+        JSONArray outputs = new JSONArray();
+        template.put("outputs",outputs);
+
+
+        JSONObject simpleText = new JSONObject();
+
+        JSONObject noNamed = new JSONObject();
+
+        noNamed.put("simpleText", simpleText);
+        outputs.add(noNamed);
+
+        Random ran = new Random();
+        Set<Integer> lotto = new HashSet<>();
+        while(lotto.size()<6) {
+            lotto.add(ran.nextInt(1, 45));
+        }
+        ArrayList<Integer> al = new ArrayList<>(lotto);
+
+        Collections.sort(al);
+
+        simpleText.put("text",al.toString());
+
+        return response.toJSONString().replace("\\/","/");
+    }
+
+    public String getDayOfWeek(KakaoRequestDto kakaoRequestDto) {
+        log.info(kakaoRequestDto.toString());
+
+        LocalDate date = kakaoRequestDto.getAction().getParams().getSys_date_params();
+
+
+        // 해당 날짜의 요일 얻기
+
+        String[] days = {"월","화","수","목","금","토","일"};
+        String result = days[date.getDayOfWeek().getValue()-1];
+
+        // 결과 출력
+        System.out.println("입력한 날짜: " + date);
+        System.out.println("해당 날짜의 요일: " + result);
+
+        JSONObject response = new JSONObject();
+        response.put("version","2.0");
+
+        JSONObject template = new JSONObject();
+        response.put("template",template);
+
+        JSONArray outputs = new JSONArray();
+        template.put("outputs",outputs);
+
+        JSONObject simpleText = new JSONObject();
+
+        JSONObject noNamed = new JSONObject();
+
+        noNamed.put("simpleText", simpleText);
+        outputs.add(noNamed);
+
+        simpleText.put("text",result+"요일 입니다");
+
+        return response.toJSONString().replace("\\/","/");
+    }
+
 }
